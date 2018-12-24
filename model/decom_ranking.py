@@ -161,12 +161,12 @@ class DecomposableAttentionRankingModel(BaseModel):
 
             sentence1_rnned, _ = _run_birnn(forward_cell, backward_cell,
                                             sentence1_embedding, sentence1_lengths)
-            sentence2_rnned, _ = _run_birnn(
-                forward_cell, backward_cell,
-                tf.concat([sentence2_pos_embedding, sentence2_neg_embedding], 0),
-                tf.concat([sentence2_pos_lengths, sentence2_neg_lengths], 0))
-            sentence2_pos_rnned, sentence2_neg_rnned = \
-                tf.split(sentence2_rnned, num_or_size_splits=2, axis=0)
+            sentence2_pos_rnned, _ = _run_birnn(forward_cell, backward_cell,
+                                                sentence2_pos_embedding,
+                                                sentence2_pos_lengths, )
+            sentence2_neg_rnned, _ = _run_birnn(forward_cell, backward_cell,
+                                                sentence2_neg_embedding,
+                                                sentence2_neg_lengths)
 
         return sentence1_embedding, sentence2_pos_embedding, sentence2_neg_embedding, \
                sentence1_rnned, sentence2_pos_rnned, sentence2_neg_rnned
