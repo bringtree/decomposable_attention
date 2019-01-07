@@ -68,6 +68,15 @@ def attend(input1, input2,
     input1_weights = _masked_softmax(
         tf.transpose(att_inner_product, [0, 2, 1]), length1)
     input2_weights = _masked_softmax(att_inner_product, length2)
+    
+    # mask the sentences.
+    sequence_mask1 = tf.expand_dims(tf.sequence_mask(
+        length1, maxlen=tf.shape(att_inner_product)[-2], dtype=tf.float32), axis=1)
+    sequence_mask2 = tf.expand_dims(tf.sequence_mask(
+        length2, maxlen=tf.shape(att_inner_product)[-1], dtype=tf.float32), axis=1)
+    input1_weights = input1_weights * tf.transpose(sequence_mask2, [0, 2, 1])
+    input2_weights = input2_weights * tf.transpose(sequence_mask1, [0, 2, 1])
+    
     output1 = tf.matmul(input1_weights, input1)
     output2 = tf.matmul(input2_weights, input2)
 
